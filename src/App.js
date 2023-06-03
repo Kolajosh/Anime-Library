@@ -1,24 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import { createTheme } from "@mui/material";
+import { makeStyles, ThemeProvider } from "@mui/styles";
+import { BrowserRouter as Router } from "react-router-dom";
+import "./App.css";
+import AppRoutes from "./routes/Routes";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { useEffect } from "react";
 
 function App() {
+  const theme = createTheme();
+  useEffect(() => {
+    AOS.init({
+      disableMutationObserver: false,
+      mirror: false,
+    });
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <Router>
+        <AppRoutes />
+      </Router>
+    </ThemeProvider>
   );
 }
 
