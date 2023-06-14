@@ -12,7 +12,7 @@ const Navbar = () => {
     if (location.pathname === "/dashboard") {
       setActiveTab1(true);
     }
-    if (location.pathname === "/insurers") {
+    if (location.pathname === "/browse") {
       setActiveTab2(true);
     }
     if (location.pathname === "/vendors") {
@@ -31,7 +31,7 @@ const Navbar = () => {
           <NavLink to={"/dashboard"}>Boards</NavLink>
         </div>
         <div className={`${activeTab2 && "text-nav-item-active font-bold"}`}>
-          <NavLink to={"/dashboard"}>Browse</NavLink>
+          <NavLink to={"/browse"}>Browse</NavLink>
         </div>
         <div className={`${activeTab3 && "text-nav-item-active font-bold"}`}>
           <NavLink to={"/dashboard"}>Dashboard</NavLink>
@@ -47,7 +47,7 @@ const Navbar = () => {
         <div>{/* <NotificationIcon /> */}</div>
         <div className="flex items-center gap-1">
           {/* <AccountIcon /> */}
-          <span>Temitope</span>
+          <span>Hi, Temitope</span>
         </div>
       </div>
     </div>

@@ -26,7 +26,7 @@ export const Button = ({
               `bg-cyan-500 hover:bg-cyan-600 text-white py-3 cursor-pointer`
             } ${
               buttonVariant === "secondary" &&
-              `border-[1.5px] border-cyan-500 hover:bg-cyan-600 text-cyan-500 py-3 cursor-pointer`
+              `border-[1.5px] border-cyan-500 text-cyan-500  py-3 cursor-pointer`
             }`
       } 
       } ${containerVariant}`}

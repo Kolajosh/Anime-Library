@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { Button } from "../../components/Button/Button";
 import DashboardWrapper from "../../components/layout/DashboardWrapper";
+import useTrendingAnime from "../../utils/hooks/useTrendingAnime";
 import SearchBox from "./components/SearchBox";
 import TopRatedBox from "./components/TopRatedBox";
 import WatchedComponent from "./components/WatchedComponent";
 import { genre } from "./constatnts";
 
 const Dashboard = () => {
+  const { sortedAnimeTrendList, gettingTrendingAnime } = useTrendingAnime();
+  console.log(sortedAnimeTrendList);
   const [selectedValue, setSelectedValue] = useState("Watch List");
 
   const handleSelectChange = (event) => {
@@ -24,7 +27,7 @@ const Dashboard = () => {
             Top rated anime 🔥
           </div>
           <div className="mx-10 mb-5">
-            <TopRatedBox />
+            <TopRatedBox sortedAnimeTrendList={sortedAnimeTrendList} />
           </div>
           <div className="mx-10 mb-5 mt-10 font-inter text-xs">
             <select

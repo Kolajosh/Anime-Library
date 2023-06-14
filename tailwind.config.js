@@ -4,9 +4,10 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        'poppins': ["Poppins", "sans-serif"],
-        'slackSide': ["Slackside One", "sans-serif"],
-        'inter': ["Inter", "sans-serif"]
+        poppins: ["Poppins", "sans-serif"],
+        slackSide: ["Slackside One", "sans-serif"],
+        inter: ["Inter", "sans-serif"],
+        verdana: ["Verdana", "sans-serif"],
       },
     },
   },
