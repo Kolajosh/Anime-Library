@@ -26,7 +26,7 @@ const Dashboard = () => {
           <div className="mx-10 font-semibold text-sm mb-5">
             Top rated anime 🔥
           </div>
-          <div className="mx-10 mb-5">
+          <div className="mb-5">
             <TopRatedBox sortedAnimeTrendList={sortedAnimeTrendList} />
           </div>
           <div className="mx-10 mb-5 mt-10 font-inter text-xs">

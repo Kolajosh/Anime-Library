@@ -4,19 +4,22 @@ import useSWR from "swr";
 import { getAnimeUrl } from "../apiUrls/anime.request";
 import useToggle from "./useToggle";
 import useApiRequest from "./useApiRequest";
+import { useState } from "react";
 
 const useAnime = (pageNumber) => {
   const makeRequest = useApiRequest();
   const [gettingCategories, toggleGettingCategories] = useToggle();
+  const [authorized, setAuthorized] = useState();
 
   const fetchAnime = async () => {
-    // toggleGettingCategories();
     try {
       const { data } = await makeRequest.get(getAnimeUrl(pageNumber));
-      // toggleGettingCategories();
       return data;
     } catch (error) {
-      // toggleGettingCategories();
+      console.log(error?.response?.status);
+      if (error?.response?.status === 401) {
+        setAuthorized(false);
+      }
       throw error;
     }
   };
@@ -37,6 +40,7 @@ const useAnime = (pageNumber) => {
     sortedAnimeList,
     error,
     mutate,
+    auth: authorized,
   };
 };
 

@@ -8,6 +8,8 @@ const Navbar = () => {
   const [activeTab2, setActiveTab2] = useState(false);
   const [activeTab3, setActiveTab3] = useState(false);
 
+  const firstName = localStorage.getItem("firstName");
+
   useEffect(() => {
     if (location.pathname === "/dashboard") {
       setActiveTab1(true);
@@ -47,7 +49,7 @@ const Navbar = () => {
         <div>{/* <NotificationIcon /> */}</div>
         <div className="flex items-center gap-1">
           {/* <AccountIcon /> */}
-          <span>Hi, Temitope</span>
+          <span>Hi, {firstName}</span>
         </div>
       </div>
     </div>

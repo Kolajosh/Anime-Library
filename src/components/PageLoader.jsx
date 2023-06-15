@@ -39,7 +39,7 @@ const PageLoader = ({ message }) => {
             alt="logo"
           />
         </div>
-        <p className="text-white text-base loading-dot">
+        <p className="text-white text-sm loading-dot">
           {message}
           {getLoadingDots()}
         </p>

@@ -23,8 +23,8 @@ const Animes = ({ sortedAnimeList }) => {
   };
 
   return (
-    <div className="font-inter mx-10">
-      <div className="mx-auto grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <div className="font-inter">
+      <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {sortedAnimeList?.map((anime, index) => (
           <div>
             <div
@@ -43,8 +43,30 @@ const Animes = ({ sortedAnimeList }) => {
                   className="w-full h-96 object-cover"
                   alt=""
                 />
+                <div
+                  className={`absolute top-0 left-0 w-full h-full flex items-center justify-center transition-opacity duration-300 ${
+                    hoveredIndex === index ? "opacity-0" : "opacity-100"
+                  }`}
+                >
+                  <div className="bg-black h-full w-full flex items-center justify-center bg-opacity-50 p-2">
+                    <p className="text-white text-lg font-bold text-center">
+                      {anime?.title?.english}
+                    </p>
+                  </div>
+                </div>
+                <div
+                  className={`absolute top-0 left-0 w-full h-full flex items-center justify-center transition-opacity duration-300 ${
+                    hoveredIndex === index ? "opacity-100" : "opacity-0"
+                  }`}
+                >
+                  <div className="bg-black relative h-full w-full flex items-center justify-center bg-opacity-50 p-2">
+                    <p className="text-white text-[10px] font-light text-center">
+                      {parse(anime?.description)}
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div
+              {/* <div
                 className={classNames(
                   "absolute top-0 left-0 w-full h-full bg-black bg-opacity-40 text-white p-4 transition-opacity",
                   {
@@ -56,11 +78,11 @@ const Animes = ({ sortedAnimeList }) => {
                 <div className="text-xs">
                   {parse(anime?.description)}
                 </div>
-              </div>
+              </div> */}
             </div>
-            <div className="text-xs text-center mt-2 font-semibold">
+            {/* <div className="text-xs text-center mt-2 font-semibold">
               {anime?.title?.romaji}
-            </div>
+            </div> */}
           </div>
         ))}
       </div>
@@ -80,9 +102,7 @@ const Animes = ({ sortedAnimeList }) => {
                 <div>
                   <div className="font-semibold">Description</div>
                   <div className="text-sm font-light font-inter">
-                    {parse(
-                      sortedAnimeList[animeIndex]?.description
-                    )}
+                    {parse(sortedAnimeList[animeIndex]?.description)}
                     <br />
                     <span>Already watched?</span>
                     <div className="mt-2">
