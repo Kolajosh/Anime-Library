@@ -1,11 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import DashboardWrapper from "../../components/layout/DashboardWrapper";
 import useAnime from "../../utils/hooks/useAnime";
 import Animes from "./component/Animes";
 
 const Browse = () => {
-  const { gettingAnime, sortedAnimeList, error, mutate } = useAnime(1);
+  const { pageNumber } = useParams();
+  console.log(pageNumber);
+  const navigate = useNavigate();
+  const [pageIndex, setPageIndex] = useState(1);
+  const { gettingAnime, sortedAnimeList, pages, error, mutate } =
+    useAnime(pageNumber);
   console.log(sortedAnimeList);
+
+  const handleNext = () => {
+    const nextPageIndex = pageIndex + 1;
+    setPageIndex(nextPageIndex);
+    navigate(`/browse/page/${nextPageIndex}`);
+  };
+
+  const handlePrev = () => {
+    const nextPageIndex = pageIndex - 1;
+    setPageIndex(nextPageIndex);
+    navigate(`/browse/page/${nextPageIndex}`);
+  };
+
+  useEffect(() => {
+    mutate();
+  }, [pageIndex]);
 
   return (
     <div>
@@ -15,7 +37,12 @@ const Browse = () => {
             Browse anime 🔎
           </div>
           <div>
-            <Animes sortedAnimeList={sortedAnimeList} />
+            <Animes
+              handleNext={handleNext}
+              handlePrev={handlePrev}
+              sortedAnimeList={sortedAnimeList}
+              pages={pages}
+            />
           </div>
         </div>
       </DashboardWrapper>

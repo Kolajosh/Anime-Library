@@ -38,6 +38,7 @@ const useAnime = (pageNumber) => {
     getAnime: fetchAnime,
     gettingAnime: isLoading,
     sortedAnimeList,
+    pages,
     error,
     mutate,
     auth: authorized,

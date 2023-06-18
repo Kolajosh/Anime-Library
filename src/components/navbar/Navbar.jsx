@@ -14,7 +14,7 @@ const Navbar = () => {
     if (location.pathname === "/dashboard") {
       setActiveTab1(true);
     }
-    if (location.pathname === "/browse") {
+    if (location.pathname === "/browse/page/") {
       setActiveTab2(true);
     }
     if (location.pathname === "/vendors") {
@@ -33,7 +33,7 @@ const Navbar = () => {
           <NavLink to={"/dashboard"}>Boards</NavLink>
         </div>
         <div className={`${activeTab2 && "text-nav-item-active font-bold"}`}>
-          <NavLink to={"/browse"}>Browse</NavLink>
+          <NavLink to={`/browse/page/${1}`}>Browse(Beta)</NavLink>
         </div>
         <div className={`${activeTab3 && "text-nav-item-active font-bold"}`}>
           <NavLink to={"/dashboard"}>Dashboard</NavLink>

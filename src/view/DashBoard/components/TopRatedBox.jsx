@@ -49,7 +49,7 @@ const TopRatedBox = ({ sortedAnimeTrendList }) => {
                   hoverIndex === index ? "opacity-0" : "opacity-100"
                 }`}
               >
-                <div className="bg-black h-full w-full flex items-center justify-center bg-opacity-50 p-2 rounded">
+                <div className="bg-black h-full w-full flex items-center justify-center bg-opacity-50 p-2">
                   <p className="text-white text-lg font-bold text-center">
                     {item?.title?.english}
                   </p>
@@ -60,7 +60,7 @@ const TopRatedBox = ({ sortedAnimeTrendList }) => {
                   hoverIndex === index ? "opacity-100" : "opacity-0"
                 }`}
               >
-                <div className="bg-black h-full w-full flex items-center justify-center bg-opacity-50 p-2 rounded">
+                <div className="bg-black h-full w-full flex items-center justify-center bg-opacity-50 p-2">
                   <p className="text-white text-[10px] font-light text-center">
                     {parse(item?.description)}
                   </p>
