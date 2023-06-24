@@ -1,14 +1,35 @@
 import React, { useEffect, useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import SearchBox from "../../view/DashBoard/components/SearchBox";
+import { ReactComponent as ToggleMenu } from "../../assets/svg/bars.svg";
+import { ReactComponent as Close } from "../../assets/svg/Close.svg";
+import useToggle from "../../utils/hooks/useToggle";
+import { ReactComponent as Search } from "../../assets/svg/search.svg";
+import { useSearchAnimeContext } from "../../context/SearchAnime";
+import useSearchAnime from "../../utils/hooks/useSearchAnime";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const { searchParams, setSearchParams } = useSearchAnimeContext();
+  const { sortedSearchList, error, mutate } = useSearchAnime(searchParams);
   const location = useLocation();
   const [activeTab1, setActiveTab1] = useState(false);
   const [activeTab2, setActiveTab2] = useState(false);
   const [activeTab3, setActiveTab3] = useState(false);
+  const [menu, setMenu] = useState(false);
 
   const firstName = localStorage.getItem("firstName");
+
+  const handleChange = (event) => {
+    const value = event.target.value;
+    setSearchParams(value);
+  };
+
+  const handleClick = () => {
+    mutate();
+  };
+
+  console.log(searchParams);
 
   useEffect(() => {
     if (location.pathname === "/dashboard") {
@@ -22,37 +43,105 @@ const Navbar = () => {
     }
   }, []);
 
-  return (
-    <div className="flex font-poppins text-sm justify-between px-10 py-4">
-      {/* logo */}
-      <div className="flex items-center font-bold text-2xl">Anime Library</div>
+  const toggleMenu = () => {
+    setMenu(!menu);
+  };
 
-      {/* nav links */}
-      <div className="flex font-inter text-nav-item-inactive text-black items-center gap-5">
-        <div className={`${activeTab1 && "text-nav-item-active font-bold"}`}>
-          <NavLink to={"/dashboard"}>Boards</NavLink>
+  return (
+    <>
+      <div className="w-full flex font-poppins text-[10px] md:text-xs justify-between items-center px-10 py-4">
+        {/* logo */}
+        <div className="flex items-center font-bold text-lg md:text-2xl">
+          Anime Library
         </div>
-        <div className={`${activeTab2 && "text-nav-item-active font-bold"}`}>
-          <NavLink to={`/browse/page/${1}`}>Browse(Beta)</NavLink>
+
+        {/* nav links */}
+        <div className="md:flex hidden font-inter text-nav-item-inactive text-black items-center gap-5">
+          <div className={`${activeTab1 && "text-nav-item-active font-bold"}`}>
+            <NavLink to={"/dashboard"}>Boards</NavLink>
+          </div>
+          <div className={`${activeTab2 && "text-nav-item-active font-bold"}`}>
+            <NavLink to={`/browse/page/${1}`}>Browse(Beta)</NavLink>
+          </div>
+          <div className={`${activeTab3 && "text-nav-item-active font-bold"}`}>
+            <NavLink to={"/dashboard"}>Dashboard</NavLink>
+          </div>
         </div>
-        <div className={`${activeTab3 && "text-nav-item-active font-bold"}`}>
-          <NavLink to={"/dashboard"}>Dashboard</NavLink>
+
+        {/* search box */}
+        <div className="hidden md:block">
+          {location?.pathname !== "/browse/search" && (
+            <div
+              onClick={() => navigate("/browse/search")}
+              className="cursor-pointer"
+            >
+              <Search />
+            </div>
+          )}
+
+          {location?.pathname === "/browse/search" && (
+            <SearchBox
+              onChange={handleChange}
+              handleClick={handleClick}
+              setSearchParams={setSearchParams}
+            />
+          )}
+        </div>
+
+        {/* profile management */}
+        <div className="md:flex hidden font-inter text-black items-center text-alat-im-black gap-6">
+          <div>{/* <NotificationIcon /> */}</div>
+          <div className="flex items-center gap-1">
+            {/* <AccountIcon /> */}
+            <span>Hi, {firstName}</span>
+          </div>
+        </div>
+
+        {/* toggle menu */}
+        <div className="relative block md:hidden">
+          <div onClick={toggleMenu} className="cursor-pointer">
+            {menu ? <Close /> : <ToggleMenu />}
+          </div>
         </div>
       </div>
 
       <div>
-        <SearchBox />
-      </div>
-
-      {/* profile management */}
-      <div className="flex font-inter text-black items-center text-alat-im-black gap-6">
-        <div>{/* <NotificationIcon /> */}</div>
-        <div className="flex items-center gap-1">
-          {/* <AccountIcon /> */}
-          <span>Hi, {firstName}</span>
+        <div
+          className={`bg-white shadow text-sm ${
+            menu ? "opacity-100" : "opacity-0"
+          } transition-opacity duration-1000`}
+        >
+          {menu && (
+            <div>
+              <div
+                className={`${
+                  activeTab1 && "text-nav-item-active font-bold"
+                } px-10 py-3`}
+              >
+                <NavLink to={"/dashboard"}>Boards</NavLink>
+              </div>
+              <div
+                className={`${
+                  activeTab2 && "text-nav-item-active font-bold"
+                } px-10 py-3`}
+              >
+                <NavLink to={`/browse/page/${1}`}>Browse(Beta)</NavLink>
+              </div>
+              <div
+                className={`${
+                  activeTab3 && "text-nav-item-active font-bold"
+                } px-10 py-3`}
+              >
+                <NavLink to={"/dashboard"}>Dashboard</NavLink>
+              </div>
+              <div className="px-10 py-5">
+                <SearchBox />
+              </div>
+            </div>
+          )}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

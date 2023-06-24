@@ -6,14 +6,25 @@ import { ReactComponent as Bookmark } from "../../../assets/svg/bookmark.svg";
 import useToggle from "../../../utils/hooks/useToggle";
 import parse from "html-react-parser";
 import useAnime from "../../../utils/hooks/useAnime";
+import useApiRequest from "../../../utils/hooks/useApiRequest";
+import {
+  addToCurrentlyWatchingListUrl,
+  addToWatchedListUrl,
+  addToWatchListUrl,
+} from "../../../utils/apiUrls/user.request";
+import { ToastNotify } from "../../../components/reusables/helpers/ToastNotify";
+import { responseMessageHandler } from "../../../utils/libs";
+import PageLoader from "../../../components/PageLoader";
 
 const Animes = ({ sortedAnimeList, pages, handleNext }) => {
   console.log(sortedAnimeList);
-  console.log(pages);
+  const makeRequest = useApiRequest();
+  const userId = localStorage?.getItem("id");
 
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [animeIndex, setAnimeIndex] = useState(null);
   const [modal, toggleModal] = useToggle();
+  const [loading, toggleLoading] = useToggle();
 
   const handleMouseEnter = (index) => {
     setHoveredIndex(index);
@@ -23,9 +34,97 @@ const Animes = ({ sortedAnimeList, pages, handleNext }) => {
     setHoveredIndex(null);
   };
 
+  // funtion to add anime to watching
+  const handleAddToBookmark = async (anime) => {
+    toggleLoading();
+    const payload = {
+      userId: userId,
+      media: { ...anime },
+    };
+    try {
+      const response = await makeRequest.post(addToWatchListUrl, payload);
+      console.log(response);
+      if (response?.status === 200) {
+        ToastNotify({
+          type: "success",
+          message: "Anime added to watching",
+          position: "top-right",
+        });
+      }
+      toggleLoading();
+    } catch (error) {
+      toggleLoading();
+      ToastNotify({
+        type: "error",
+        message: responseMessageHandler({ error }),
+        position: "top-right",
+      });
+    }
+  };
+
+  // funtion to add anime to watched
+  const handleAddToWatched = async (anime) => {
+    toggleLoading();
+    const payload = {
+      userId: userId,
+      media: { ...anime },
+    };
+    try {
+      const response = await makeRequest.post(addToWatchedListUrl, payload);
+      console.log(response);
+      if (response?.status === 200) {
+        ToastNotify({
+          type: "success",
+          message: "Anime added to watched list",
+          position: "top-right",
+        });
+      }
+      toggleLoading();
+    } catch (error) {
+      toggleLoading();
+      ToastNotify({
+        type: "error",
+        message: responseMessageHandler({ error }),
+        position: "top-right",
+      });
+    }
+  };
+
+  // funtion to add anime to currently watching
+  const handleAddToCurrentlyWatching = async (anime) => {
+    toggleLoading();
+    const payload = {
+      userId: userId,
+      media: { ...anime },
+    };
+    try {
+      const response = await makeRequest.post(
+        addToCurrentlyWatchingListUrl,
+        payload
+      );
+      console.log(response);
+      if (response?.status === 200) {
+        ToastNotify({
+          type: "success",
+          message: "Anime added to currently watching list",
+          position: "top-right",
+        });
+      }
+      toggleLoading();
+    } catch (error) {
+      toggleLoading();
+      ToastNotify({
+        type: "error",
+        message: responseMessageHandler({ error }),
+        position: "top-right",
+      });
+    }
+  };
+
   return (
     <div className="font-inter">
-      <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      {loading && <PageLoader message={"Adding"} />}
+      <div className="mx-auto grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {sortedAnimeList?.map((anime, index) => (
           <div key={index}>
             <div
@@ -68,8 +167,8 @@ const Animes = ({ sortedAnimeList, pages, handleNext }) => {
                   )}
                 >
                   <div className="bg-black relative h-full w-full flex items-center justify-center bg-opacity-50 p-2">
-                    <p className="text-white text-[10px] font-light text-center">
-                      {parse(anime?.description)}
+                    <p className="text-white text-[10px] font-light text-center truncate">
+                      {anime?.description === null ? anime?.description : parse(anime?.description)}
                     </p>
                   </div>
                 </div>
@@ -111,14 +210,22 @@ const Animes = ({ sortedAnimeList, pages, handleNext }) => {
                   alt=""
                 />
                 <div className="relative">
-                  <div>
+                  <div
+                    onClick={() =>
+                      handleAddToCurrentlyWatching(sortedAnimeList[animeIndex])
+                    }
+                  >
                     <Button
                       containerVariant="w-full mt-3 h-10 rounded-md flex justify-center"
-                      labelText="Add to Watch List"
+                      labelText="Add to Watching"
                       buttonVariant="primary"
                     />
                   </div>
-                  <div>
+                  <div
+                    onClick={() =>
+                      handleAddToBookmark(sortedAnimeList[animeIndex])
+                    }
+                  >
                     <Button
                       containerVariant="w-full mt-3 h-10 rounded-md flex justify-center"
                       labelText="Bookmark"
@@ -131,12 +238,17 @@ const Animes = ({ sortedAnimeList, pages, handleNext }) => {
                 <div>
                   <div className="font-semibold">Description</div>
                   <div className="text-sm font-light font-inter">
-                    {parse(sortedAnimeList[animeIndex]?.description)}
+                    {sortedAnimeList[animeIndex]?.description === null ? sortedAnimeList[animeIndex]?.description : parse(sortedAnimeList[animeIndex]?.description)}
                     <br />
                     <span>Already watched?</span>
-                    <div className="mt-2">
+                    <div
+                      onClick={() =>
+                        handleAddToWatched(sortedAnimeList[animeIndex])
+                      }
+                      className="mt-2"
+                    >
                       <Button
-                        labelText="Add to Watched list"
+                        labelText="Add to Watched"
                         buttonVariant="secondary"
                       />
                     </div>

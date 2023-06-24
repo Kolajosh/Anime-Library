@@ -1,23 +1,7 @@
 import React, { useState } from "react";
 import { ReactComponent as Menu } from "../../../assets/svg/menu.svg";
-import img from "../../../assets/img/random.png";
 
-const data = [
-  {
-    name: "Naruto",
-    episodes: 700,
-  },
-  {
-    name: "Bleach",
-    episodes: 30,
-  },
-  {
-    name: "Demon Slayer",
-    episodes: 160,
-  },
-];
-
-const WatchedComponent = ({ title }) => {
+const WatchedComponent = ({ title, watched }) => {
   const [activeIndex, setActiveIndex] = useState(null);
 
   const toggleSubMenu = (index) => {
@@ -39,55 +23,69 @@ const WatchedComponent = ({ title }) => {
       <div className="font-inter">
         <div>
           <span className="font-semibold text-sm">{title}</span>
-          <div className="bg-gray-100
-          ' px-3 rounded-r-3xl">
-            {data?.map((x, index) => (
-              <div
-                className="px-3 py-5 rounded-lg border-b border-gray-300 mt-3"
-                key={index}
-              >
-                <div className="flex justify-between">
-                  <div className="flex  gap-2">
-                    <div className="w-16 h-16 rounded-xl overflow-hidden">
-                      <img
-                        className="w-full h-full object-cover"
-                        src={img}
-                        alt=""
-                      />
-                    </div>
-                    <div>
-                      <div className="text-sm font-normal">{x?.name}</div>
-                      <div className="text-[10px]">{x?.episodes} episodes</div>
-                      <div className="text-[10px] mt-2">1 day ago</div>
-                    </div>
-                  </div>
-                  <div className="relative">
+          <div
+            className={`${
+              watched?.length === 0 && "flex items-center justify-center"
+            } border-2 border-dashed h-96 overflow-scroll p-5 border-gray-200 mt-5 rounded-3xl`}
+          >            {watched?.length === 0 ? (
+              <div className="text-xs">
+                <div>No anime added 🙈</div>
+              </div>
+            ) : (
+              <>
+                {watched?.map((x, index) => (
                     <div
-                      className="cursor-pointer"
-                      onClick={() => toggleSubMenu(index)}
+                      className="border rounded-xl mb-3 border-gray-100"
+                      key={index}
                     >
-                      <Menu />
-                    </div>
-                    {activeIndex === index && (
-                      <div className="absolute text-xs z-10 right-0 mt-2 py-2 w-48 bg-white rounded-md shadow-lg">
-                        <div
-                          className="block px-4 py-1 text-xs text-gray-700 hover:bg-gray-100 cursor-pointer"
-                          onClick={() => handleEdit(x?.name)}
-                        >
-                          Edit
+                      <div className="flex justify-between">
+                        <div className="flex gap-2">
+                          <div className="w-20 h-20 overflow-hidden">
+                            <img
+                              className="w-full rounded-l-xl h-full object-cover"
+                              src={x?.coverUrl}
+                              alt=""
+                            />
+                          </div>
+                          <div className="my-auto">
+                            <div className="text-[10px] font-semibold">
+                              {x?.title}
+                            </div>
+                            <div className="text-[10px] font-light">
+                              {x?.episodes} episodes
+                            </div>
+                            <div className="text-[10px] mt-2">1 day ago</div>
+                          </div>
                         </div>
-                        <div
-                          className="block px-4 py-1 text-xs text-gray-700 hover:bg-gray-100 cursor-pointer"
-                          onClick={() => handleDelete(x?.name)}
-                        >
-                          Delete
+                        <div className="relative my-auto">
+                          <div
+                            className="cursor-pointer"
+                            onClick={() => toggleSubMenu(index)}
+                          >
+                            <Menu />
+                          </div>
+                          {activeIndex === index && (
+                            <div className="absolute text-xs z-10 right-0 mt-2 py-2 w-48 bg-white rounded-md shadow-lg">
+                              <div
+                                className="block px-4 py-1 text-xs text-gray-700 hover:bg-gray-100 cursor-pointer"
+                                onClick={() => handleEdit(x?.name)}
+                              >
+                                Edit
+                              </div>
+                              <div
+                                className="block px-4 py-1 text-xs text-gray-700 hover:bg-gray-100 cursor-pointer"
+                                onClick={() => handleDelete(x?.name)}
+                              >
+                                Delete
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
+                    </div>
+                  ))}
+              </>
+            )}
           </div>
         </div>
       </div>

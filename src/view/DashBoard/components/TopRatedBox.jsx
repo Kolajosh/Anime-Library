@@ -8,18 +8,6 @@ import parse from "html-react-parser";
 const TopRatedBox = ({ sortedAnimeTrendList }) => {
   const [hoverIndex, setHoverIndex] = useState(null);
 
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    prevArrow: false,
-    nextArrow: false,
-  };
-
   const handleMouseEnter = (index) => {
     setHoverIndex(index);
   };
@@ -30,7 +18,31 @@ const TopRatedBox = ({ sortedAnimeTrendList }) => {
 
   return (
     <div className="w-full mx-auto">
-      <Slider {...settings}>
+      <Slider
+        dots
+        infinite
+        speed={500}
+        slidesToShow={3}
+        slidesToScroll={1}
+        autoplay
+        autoplaySpeed={3000}
+        prevArrow={false}
+        nextArrow={false}
+        responsive={[
+          {
+            breakpoint: 1024, // medium-sized screens (md)
+            settings: {
+              slidesToShow: 2,
+            },
+          },
+          {
+            breakpoint: 768, // small screens
+            settings: {
+              slidesToShow: 1,
+            },
+          },
+        ]}
+      >
         {sortedAnimeTrendList?.map((item, index) => (
           <div
             key={index}

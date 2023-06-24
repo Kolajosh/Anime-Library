@@ -16,7 +16,7 @@ const useAnime = (pageNumber) => {
       const { data } = await makeRequest.get(getAnimeUrl(pageNumber));
       return data;
     } catch (error) {
-      console.log(error?.response?.status);
+      console.log(error?.response?.status)
       if (error?.response?.status === 401) {
         setAuthorized(false);
       }
