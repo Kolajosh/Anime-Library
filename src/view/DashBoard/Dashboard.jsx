@@ -1,19 +1,163 @@
 import React, { useState } from "react";
 import { Button } from "../../components/Button/Button";
 import DashboardWrapper from "../../components/layout/DashboardWrapper";
+import { ToastNotify } from "../../components/reusables/helpers/ToastNotify";
+import {
+  moveBookmarktoWatched,
+  moveBookmarktoWatching,
+  moveWatchedtoBookmarkUrl,
+  moveWatchedtoWatching,
+  moveWatchingtoBookmark,
+  moveWatchingtoWatchedUrl,
+} from "../../utils/apiUrls/user.request";
+import useApiRequest from "../../utils/hooks/useApiRequest";
+import useTrendingAnime from "../../utils/hooks/useTrendingAnime";
+import useUserAnimeList from "../../utils/hooks/useUserAnimeList";
+import { responseMessageHandler } from "../../utils/libs";
 import SearchBox from "./components/SearchBox";
 import TopRatedBox from "./components/TopRatedBox";
+import ToWatchList from "./components/ToWatchList";
 import WatchedComponent from "./components/WatchedComponent";
+import WatchList from "./components/WatchList";
 import { genre } from "./constatnts";
 
 const Dashboard = () => {
+  const makeRequest = useApiRequest();
+  const { sortedAnimeTrendList, gettingTrendingAnime } = useTrendingAnime();
   const [selectedValue, setSelectedValue] = useState("Watch List");
+  const [type, setType] = useState("");
+  const [isDragging, setIsDragging] = useState(false);
+
+  const userId = localStorage.getItem("id");
+
+  const { watchList, watched, watching, mutate } = useUserAnimeList(userId);
+
+  const handleDragStart = (event, x, type) => {
+    event.dataTransfer.setData("card", JSON.stringify(x));
+    setIsDragging(true);
+    setType(type);
+    console.log(type);
+  };
+
+  const handleDragOver = (event) => {
+    event.preventDefault();
+  };
+
+  const handleDropWatched = async (event) => {
+    event.preventDefault();
+    setIsDragging(false);
+    const card = JSON.parse(event.dataTransfer.getData("card"));
+    // Do something with the dropped card in the watched component
+
+    if (type !== "watched") {
+      try {
+        const payload = {
+          animeId: card?.id,
+          userId: card?.userId,
+        };
+        const response = await makeRequest.post(
+          type === "watching"
+            ? moveWatchingtoWatchedUrl
+            : type === "bookmark" && moveBookmarktoWatched,
+          payload
+        );
+        if (response?.status === 200) {
+          ToastNotify({
+            message: "Moved",
+            type: "success",
+            position: "top-right",
+          });
+          mutate();
+        }
+      } catch (error) {
+        ToastNotify({
+          message: responseMessageHandler({ error }),
+          type: "error",
+          position: "top-right",
+        });
+      }
+    }
+
+    console.log("Dropped card:", card);
+  };
+
+  const handleDropBookmark = async (event) => {
+    event.preventDefault();
+    setIsDragging(false);
+    const card = JSON.parse(event.dataTransfer.getData("card"));
+    // Do something with the dropped card in the watched component
+
+    if (type !== "bookmark") {
+      try {
+        const payload = {
+          animeId: card?.id,
+          userId: card?.userId,
+        };
+        const response = await makeRequest.post(
+          type === "watching"
+            ? moveWatchingtoBookmark
+            : type === "watched" && moveWatchedtoBookmarkUrl,
+          payload
+        );
+        if (response?.status === 200) {
+          ToastNotify({
+            message: "Moved",
+            type: "success",
+            position: "top-right",
+          });
+          mutate();
+        }
+      } catch (error) {
+        ToastNotify({
+          message: responseMessageHandler({ error }),
+          type: "error",
+          position: "top-right",
+        });
+      }
+    }
+
+    console.log("Dropped card:", card);
+  };
+
+  const handleDropWatching = async (event) => {
+    event.preventDefault();
+    setIsDragging(false);
+    const card = JSON.parse(event.dataTransfer.getData("card"));
+    // Do something with the dropped card in the watched component
+
+    if (type !== "watching") {
+      try {
+        const payload = {
+          animeId: card?.id,
+          userId: card?.userId,
+        };
+        const response = await makeRequest.post(
+          type === "bookmark"
+            ? moveBookmarktoWatching
+            : type === "watched" && moveWatchedtoWatching,
+          payload
+        );
+        if (response?.status === 200) {
+          ToastNotify({
+            message: "Moved",
+            type: "success",
+            position: "top-right",
+          });
+          mutate();
+        }
+      } catch (error) {
+        ToastNotify({
+          message: responseMessageHandler({ error }),
+          type: "error",
+          position: "top-right",
+        });
+      }
+    }
+  };
 
   const handleSelectChange = (event) => {
     setSelectedValue(event.target.value);
   };
-
-  console.log(selectedValue);
 
   return (
     <div>
@@ -23,60 +167,41 @@ const Dashboard = () => {
           <div className="mx-10 font-semibold text-sm mb-5">
             Top rated anime 🔥
           </div>
-          <div className="mx-10 mb-5">
-            <TopRatedBox />
+          <div className="mb-5">
+            <TopRatedBox sortedAnimeTrendList={sortedAnimeTrendList} />
           </div>
-          <div className="mx-10 mb-5 mt-10 font-inter text-xs">
-            <select
-              value={selectedValue}
-              onChange={handleSelectChange}
-              className=" bg-transparent border-b border-black py-2 px-3 text-xs leading-tight focus:outline-none focus:border-blue-500"
-            >
-              <option className="py-1" value="Watch List">
-                Watch List
-              </option>
-              <option className="py-1" value="Watching">
-                Watching
-              </option>
-              <option className="py-1" value="Watched">
-                Watched
-              </option>
-            </select>
-          </div>
+          <div className="mx-10 mb-5 mt-10 font-inter text-xs"></div>
 
-          <div className="mx-10 mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="mx-10 grid grid-cols-1 md:grid-cols-6 gap-5 mt-5">
             <div className="col-span-2">
-              {selectedValue === "Watch List" && (
-                <WatchedComponent title="Watch List 😴..." />
-              )}
-              {selectedValue === "Watching" && (
-                <WatchedComponent title="Watching 👀..." />
-              )}
-              {selectedValue === "Watched" && (
-                <WatchedComponent title="Watched 🔥..." />
-              )}
+              <WatchList
+                watching={watching}
+                onDragStart={handleDragStart}
+                onDrop={handleDropWatching}
+                onDragOver={handleDragOver}
+                isDragging={isDragging}
+                title="Currently Watching 😴..."
+              />
             </div>
             <div className="col-span-2">
-              <div>
-                <span className="font-semibold text-sm">
-                  Discover Popular Categories
-                </span>
-                <div className="flex flex-wrap gap-4 mt-5 text-xs font-light text-gray-500">
-                  {genre?.map((x, index) => (
-                    <>
-                      <div
-                        key={index}
-                        className="px-4 cursor-pointer hover:bg-cyan-300 py-2 bg-white shadow-lg rounded-3xl"
-                      >
-                        {x?.name}
-                      </div>
-                    </>
-                  ))}
-                  <button className="bg-cyan-600 px-4 py-2 text-white rounded-3xl">
-                    {"View all >"}
-                  </button>
-                </div>
-              </div>
+              <WatchedComponent
+                onDragStart={handleDragStart}
+                onDragOver={handleDragOver}
+                onDrop={handleDropWatched}
+                watched={watched}
+                isDragging={isDragging}
+                title="Watched 👀..."
+              />
+            </div>
+            <div className="col-span-2">
+              <ToWatchList
+                onDragStart={handleDragStart}
+                onDragOver={handleDragOver}
+                onDrop={handleDropBookmark}
+                watchList={watchList}
+                isDragging={isDragging}
+                title="Bookmarks 👀..."
+              />
             </div>
           </div>
         </div>

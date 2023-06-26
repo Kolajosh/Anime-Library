@@ -1,14 +1,23 @@
 // import { Typography } from "@mui/material";
 import { useFormik } from "formik";
+import "../Login//Login.css";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import vid1 from "../../assets/mp4/bg.mp4";
+import PageLoader from "../../components/PageLoader";
+import { ToastNotify } from "../../components/reusables/helpers/ToastNotify";
 import { TextField } from "../../components/reusables/TextField";
-import { LoginValidationSchema } from "../../utils/validationSchema/login.validations";
-import "../Login//Login.css";
+import { registerUrl } from "../../utils/apiUrls/auth.request";
+import useApiRequest from "../../utils/hooks/useApiRequest";
+import useToggle from "../../utils/hooks/useToggle";
+import { RegisterValidationSchema } from "../../utils/validationSchema/login.validations";
+import { responseMessageHandler } from "../../utils/libs";
 
 const Register = () => {
   const navigate = useNavigate();
+  const makeRequest = useApiRequest();
+  const [loading, toggleLoading] = useToggle();
+  const [accountCreated, toggleAccountCreated] = useToggle();
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -19,10 +28,37 @@ const Register = () => {
     },
 
     onSubmit: async (values) => {
-      console.log(values);
+      toggleLoading();
+      const payload = {
+        firstName: values?.firstName,
+        lastName: values?.lastName,
+        email: values?.email,
+        password: values?.password,
+      };
+      try {
+        const response = await makeRequest.post(registerUrl, payload);
+        console.log(response);
+        if (response?.status === 200) {
+          toggleLoading();
+          ToastNotify({
+            type: "success",
+            message: "Account Created Successfully, Proceed to login",
+            position: "top-right",
+          });
+          toggleAccountCreated();
+          setTimeout(() => navigate("/"), 3000);
+        }
+      } catch (error) {
+        toggleLoading();
+        ToastNotify({
+          type: "error",
+          message: responseMessageHandler({ error }),
+          position: "top-right",
+        });
+      }
     },
 
-    validationSchema: LoginValidationSchema,
+    validationSchema: RegisterValidationSchema,
   });
 
   const {
@@ -39,6 +75,10 @@ const Register = () => {
 
   return (
     <div className="flex items-center w-full font-poppins justify-evenly min-h-screen">
+      {loading && <PageLoader message={"Creating your profile"} />}
+      {accountCreated && (
+        <PageLoader message="Account Created 😋, Redirecting you to login" />
+      )}
       {/* left section */}
       <div
         data-aos="fade-right"
@@ -124,20 +164,29 @@ const Register = () => {
                 hasError={errors?.password2 && touched?.password2}
                 error={errors?.password2}
               />
+              <span className="text-[10px] text-red-500">
+                {values?.password !== values?.password2 &&
+                  "Passwords don't match"}
+              </span>
             </div>
 
             {/* button */}
             <div className="col-span-full mt-5">
               <button
                 type="button"
-                className={`px-5 bg-cyan-500 py-3 text-white rounded-md w-full ${
-                  !(dirty && isValid) && "cursor-not-allowed bg-cyan-200"
+                className={`px-5 py-3 text-white rounded-md w-full ${
+                  !(dirty && isValid) || values?.password !== values?.password2
+                    ? "bg-cyan-200 cursor-not-allowed"
+                    : "bg-cyan-500"
                 }`}
                 onClick={handleSubmit}
-                disabled={!(dirty && isValid)}
+                disabled={
+                  !(dirty && isValid) || values?.password !== values?.password2
+                }
               >
                 Register
               </button>
+
               <div
                 onClick={() => navigate("/")}
                 className="font-normal text-xs text-center mt-3 cursor-pointer text-cyan-500"

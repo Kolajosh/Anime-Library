@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { ReactComponent as Menu } from "../../../assets/svg/menu.svg";
 
-const WatchedComponent = ({
+const ToWatchList = ({
   title,
-  watched,
-  onDragOver,
+  watchList,
   onDrop,
+  onDragOver,
   onDragStart,
   isDragging,
 }) => {
@@ -34,23 +34,22 @@ const WatchedComponent = ({
             onDragOver={onDragOver}
             onDrop={onDrop}
             className={`${
-              watched?.length === 0 && "flex items-center justify-center"
+              watchList?.length === 0 && "flex items-center justify-center"
             } border-2 border-dashed h-96 overflow-scroll p-5 border-gray-200 mt-5 rounded-3xl`}
           >
-            {" "}
-            {watched?.length === 0 ? (
+            {watchList?.length === 0 ? (
               <div className="text-xs">
                 <div>No anime added 🙈</div>
               </div>
             ) : (
               <>
-                {watched?.map((x, index) => (
+                {watchList?.map((x, index) => (
                   <div
+                    onDragStart={(event) => onDragStart(event, x, "bookmark")}
                     className={`border hover:cursor-grab ${
                       isDragging ? "cursor-grabbing" : "cursor-grab"
                     } rounded-xl mb-3 border-gray-100`}
                     draggable
-                    onDragStart={(event) => onDragStart(event, x, "watched")}
                     key={index}
                   >
                     <div className="flex justify-between">
@@ -108,4 +107,4 @@ const WatchedComponent = ({
   );
 };
 
-export default WatchedComponent;
+export default ToWatchList;

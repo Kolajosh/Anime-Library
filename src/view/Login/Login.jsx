@@ -3,12 +3,20 @@ import { useFormik } from "formik";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import vid1 from "../../assets/mp4/bg.mp4";
+import PageLoader from "../../components/PageLoader";
+import { ToastNotify } from "../../components/reusables/helpers/ToastNotify";
 import { TextField } from "../../components/reusables/TextField";
+import { loginUrl } from "../../utils/apiUrls/auth.request";
+import useApiRequest from "../../utils/hooks/useApiRequest";
+import useToggle from "../../utils/hooks/useToggle";
+import { responseMessageHandler } from "../../utils/libs";
 import { LoginValidationSchema } from "../../utils/validationSchema/login.validations";
 import "./Login.css";
 
 const Login = () => {
   const navigate = useNavigate();
+  const makeRequest = useApiRequest();
+  const [loading, toggleLoading] = useToggle();
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -16,8 +24,43 @@ const Login = () => {
     },
 
     onSubmit: async (values) => {
-      console.log(values);
-      navigate("/dashboard");
+      toggleLoading();
+      const payload = {
+        email: values?.email,
+        password: values?.password,
+      };
+      try {
+        const response = await makeRequest.post(loginUrl, payload);
+        toggleLoading();
+        console.log(response?.data?.data);
+        if (response?.status === 200) {
+          ToastNotify({
+            type: "success",
+            message: responseMessageHandler({ response }),
+            position: "top-right",
+          });
+          localStorage.setItem(
+            "accessToken",
+            response?.data?.data?.accessToken
+          );
+          localStorage.setItem("id", response?.data?.data?.id);
+          localStorage.setItem("email", response?.data?.data?.email);
+          localStorage.setItem(
+            "refreshToken",
+            response?.data?.data?.refreshToken
+          );
+          localStorage.setItem("firstName", response?.data?.data?.firstName);
+          navigate("/dashboard");
+        }
+      } catch (error) {
+        toggleLoading();
+        ToastNotify({
+          type: "error",
+          message: responseMessageHandler({ error }),
+          position: "top-right",
+        });
+      }
+      // navigate("/dashboard");
     },
 
     validationSchema: LoginValidationSchema,
@@ -37,6 +80,7 @@ const Login = () => {
 
   return (
     <div className="flex w-full items-center font-poppins justify-evenly min-h-screen">
+      {loading && <PageLoader message="Crossing the Grand Line" />}
       {/* left section */}
       <div
         data-aos="fade-right"
