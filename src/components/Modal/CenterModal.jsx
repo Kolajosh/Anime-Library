@@ -13,6 +13,7 @@ const CenterModal = ({
   handleClose,
   handleClick2,
   showCloseIcon,
+  width = "90%"
 }) => {
   return (
     <div
@@ -21,13 +22,13 @@ const CenterModal = ({
     >
       <center className="flex justify-center items-center w-full">
         <div
-          className="h-auto w-[90%] bg-white fixed border z-5000 rounded-md py-2 overflow-y-auto"
+          className={`h-auto w-[${width}] bg-white fixed border z-5000 rounded-md py-2 overflow-y-auto`}
           style={{ maxHeight: "80vh" }}
           onClick={(e) => e.stopPropagation()}
         >
           <div className="mx-6 my-4">
             <div className="flex justify-between items-center">
-              <p className="text-2xl font-semibold text-left text-alat-im-black">
+              <p className="text-xl font-semibold text-left text-alat-im-black">
                 {title}
               </p>
               <div className="cursor-pointer" onClick={handleClose}>

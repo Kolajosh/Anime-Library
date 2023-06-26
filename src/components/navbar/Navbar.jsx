@@ -17,6 +17,7 @@ const Navbar = () => {
   const [activeTab2, setActiveTab2] = useState(false);
   const [activeTab3, setActiveTab3] = useState(false);
   const [menu, setMenu] = useState(false);
+  const [dropdown, showDropdown] = useToggle();
 
   const firstName = localStorage.getItem("firstName");
 
@@ -29,13 +30,11 @@ const Navbar = () => {
     mutate();
   };
 
-  console.log(searchParams);
-
   useEffect(() => {
     if (location.pathname === "/dashboard") {
       setActiveTab1(true);
     }
-    if (location.pathname === "/browse/page/") {
+    if (location.pathname === "/browse/page/:pageNumber") {
       setActiveTab2(true);
     }
     if (location.pathname === "/vendors") {
@@ -47,11 +46,19 @@ const Navbar = () => {
     setMenu(!menu);
   };
 
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/");
+  };
+
   return (
     <>
       <div className="w-full flex font-poppins text-[10px] md:text-xs justify-between items-center px-10 py-4">
         {/* logo */}
-        <div className="flex items-center font-bold text-lg md:text-2xl">
+        <div
+          onClick={() => navigate("/dashboard")}
+          className="flex items-center cursor-pointer font-bold text-lg md:text-2xl"
+        >
           Anime Library
         </div>
 
@@ -63,13 +70,10 @@ const Navbar = () => {
           <div className={`${activeTab2 && "text-nav-item-active font-bold"}`}>
             <NavLink to={`/browse/page/${1}`}>Browse(Beta)</NavLink>
           </div>
-          <div className={`${activeTab3 && "text-nav-item-active font-bold"}`}>
-            <NavLink to={"/dashboard"}>Dashboard</NavLink>
-          </div>
         </div>
 
         {/* search box */}
-        <div className="hidden md:block">
+        <div className="">
           {location?.pathname !== "/browse/search" && (
             <div
               onClick={() => navigate("/browse/search")}
@@ -91,9 +95,16 @@ const Navbar = () => {
         {/* profile management */}
         <div className="md:flex hidden font-inter text-black items-center text-alat-im-black gap-6">
           <div>{/* <NotificationIcon /> */}</div>
-          <div className="flex items-center gap-1">
+          <div className="relative  flex items-center gap-1">
             {/* <AccountIcon /> */}
-            <span>Hi, {firstName}</span>
+            <span className="cursor-pointer" onClick={() => showDropdown()}>
+              Hi, {firstName}
+            </span>
+            {dropdown && (
+              <div className="absolute mt-20 rounded-xl shadow p-3 -ml-3">
+                <button onClick={handleLogout}>Logout</button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -133,9 +144,6 @@ const Navbar = () => {
                 } px-10 py-3`}
               >
                 <NavLink to={"/dashboard"}>Dashboard</NavLink>
-              </div>
-              <div className="px-10 py-5">
-                <SearchBox />
               </div>
             </div>
           )}

@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import { ReactComponent as Menu } from "../../../assets/svg/menu.svg";
 
-const ToWatchList = ({ title, watchList }) => {
+const ToWatchList = ({
+  title,
+  watchList,
+  onDrop,
+  onDragOver,
+  onDragStart,
+  isDragging,
+}) => {
   const [activeIndex, setActiveIndex] = useState(null);
 
   const toggleSubMenu = (index) => {
@@ -24,6 +31,8 @@ const ToWatchList = ({ title, watchList }) => {
         <div>
           <span className="font-semibold text-sm">{title}</span>
           <div
+            onDragOver={onDragOver}
+            onDrop={onDrop}
             className={`${
               watchList?.length === 0 && "flex items-center justify-center"
             } border-2 border-dashed h-96 overflow-scroll p-5 border-gray-200 mt-5 rounded-3xl`}
@@ -36,7 +45,11 @@ const ToWatchList = ({ title, watchList }) => {
               <>
                 {watchList?.map((x, index) => (
                   <div
-                    className="border rounded-xl mb-3 border-gray-100"
+                    onDragStart={(event) => onDragStart(event, x, "bookmark")}
+                    className={`border hover:cursor-grab ${
+                      isDragging ? "cursor-grabbing" : "cursor-grab"
+                    } rounded-xl mb-3 border-gray-100`}
+                    draggable
                     key={index}
                   >
                     <div className="flex justify-between">
