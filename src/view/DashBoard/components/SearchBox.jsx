@@ -2,11 +2,6 @@ import React from "react";
 import { ReactComponent as Search } from "../../../assets/svg/search.svg";
 
 const SearchBox = ({ value, onChange, handleClick }) => {
-  const handleIconClick = () => {
-    // Handle the click event for the search icon
-    console.log("Search icon clicked");
-  };
-
   return (
     <div className="relative">
       <input

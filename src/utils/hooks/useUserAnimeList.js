@@ -1,4 +1,3 @@
-import React from "react";
 import useSWR from "swr";
 import { getUserListUrl } from "../apiUrls/user.request";
 import useApiRequest from "./useApiRequest";

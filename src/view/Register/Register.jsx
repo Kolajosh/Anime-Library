@@ -69,7 +69,6 @@ const Register = () => {
     handleChange,
     handleSubmit,
     dirty,
-    hasError,
     touched,
   } = formik;
 

@@ -9,7 +9,7 @@ const Browse = () => {
   const { pageNumber } = useParams();
   const navigate = useNavigate();
   const [pageIndex, setPageIndex] = useState(1);
-  const { gettingAnime, sortedAnimeList, pages, error, mutate } =
+  const { gettingAnime, sortedAnimeList, pages, mutate } =
     useAnime(pageNumber);
   console.log(sortedAnimeList);
 
@@ -27,7 +27,7 @@ const Browse = () => {
 
   useEffect(() => {
     mutate();
-  }, [pageIndex]);
+  }, [pageIndex, mutate]);
 
   return (
     <div>
