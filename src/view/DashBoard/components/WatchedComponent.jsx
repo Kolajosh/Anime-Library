@@ -134,25 +134,27 @@ const WatchedComponent = ({
                           <div className="absolute text-xs z-10 right-0 mt-2 py-2 w-48 bg-white rounded-md shadow-lg">
                             <div
                               className="block px-4 py-1 text-xs text-gray-700 hover:bg-gray-100 cursor-pointer"
-                              onClick={() =>
+                              onClick={() => {
                                 handleMoveToWatching({
                                   animeId: x?.id,
                                   userId: x?.userId,
-                                })
-                              }
+                                });
+                                toggleSubMenu(index);
+                              }}
                             >
-                              Edit
+                              Move to Watching
                             </div>
                             <div
                               className="block px-4 py-1 text-xs text-gray-700 hover:bg-gray-100 cursor-pointer"
-                              onClick={() =>
+                              onClick={() => {
                                 handleMoveToBookmarks({
                                   animeId: x?.id,
                                   userId: x?.userId,
-                                })
-                              }
+                                });
+                                toggleSubMenu(index);
+                              }}
                             >
-                              Delete
+                              Move to Watched
                             </div>
                           </div>
                         )}
