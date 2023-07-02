@@ -6,6 +6,9 @@
 .pnp.js
 
 # testing
+/cypress
+
+# testing
 /coverage
 
 # production
