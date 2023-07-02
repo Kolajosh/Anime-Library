@@ -74,7 +74,6 @@ const Login = () => {
     handleChange,
     handleSubmit,
     dirty,
-    hasError,
     touched,
   } = formik;
 

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Button } from "../../components/Button/Button";
 import DashboardWrapper from "../../components/layout/DashboardWrapper";
 import { ToastNotify } from "../../components/reusables/helpers/ToastNotify";
 import {
@@ -14,17 +13,14 @@ import useApiRequest from "../../utils/hooks/useApiRequest";
 import useTrendingAnime from "../../utils/hooks/useTrendingAnime";
 import useUserAnimeList from "../../utils/hooks/useUserAnimeList";
 import { responseMessageHandler } from "../../utils/libs";
-import SearchBox from "./components/SearchBox";
 import TopRatedBox from "./components/TopRatedBox";
 import ToWatchList from "./components/ToWatchList";
 import WatchedComponent from "./components/WatchedComponent";
 import WatchList from "./components/WatchList";
-import { genre } from "./constatnts";
 
 const Dashboard = () => {
   const makeRequest = useApiRequest();
-  const { sortedAnimeTrendList, gettingTrendingAnime } = useTrendingAnime();
-  const [selectedValue, setSelectedValue] = useState("Watch List");
+  const { sortedAnimeTrendList } = useTrendingAnime();
   const [type, setType] = useState("");
   const [isDragging, setIsDragging] = useState(false);
 
@@ -153,10 +149,6 @@ const Dashboard = () => {
         });
       }
     }
-  };
-
-  const handleSelectChange = (event) => {
-    setSelectedValue(event.target.value);
   };
 
   return (

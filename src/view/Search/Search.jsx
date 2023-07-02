@@ -1,14 +1,13 @@
 import React from "react";
 import DashboardWrapper from "../../components/layout/DashboardWrapper";
-import PageLoader from "../../components/PageLoader";
 import Spinner from "../../components/Spinner";
 import { useSearchAnimeContext } from "../../context/SearchAnime";
 import useSearchAnime from "../../utils/hooks/useSearchAnime";
 import Animes from "../Browse/component/Animes";
 
 const Search = () => {
-  const { searchParams, setSearchParams } = useSearchAnimeContext();
-  const { sortedSearchList, pages, searchingAnime, error, mutate } =
+  const { searchParams } = useSearchAnimeContext();
+  const { sortedSearchList, pages, searchingAnime } =
     useSearchAnime(searchParams);
 
   console.log(sortedSearchList);

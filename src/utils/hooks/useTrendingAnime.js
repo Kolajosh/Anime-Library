@@ -1,13 +1,10 @@
 // import { responseMessageHandler } from "../../libs";
 import useSWR from "swr";
-// import { ToastNotify } from "../../component/reusables/helpers/ToastNotify";
-import { getAnimeUrl, getTrendingAnimeUrl } from "../apiUrls/anime.request";
-import useToggle from "./useToggle";
+import { getTrendingAnimeUrl } from "../apiUrls/anime.request";
 import useApiRequest from "./useApiRequest";
 
 const useTrendingAnime = () => {
   const makeRequest = useApiRequest();
-  const [gettingCategories, toggleGettingCategories] = useToggle();
 
   const fetchTrendingAnime = async () => {
     // toggleGettingCategories();
@@ -29,7 +26,6 @@ const useTrendingAnime = () => {
   } = useSWR(getTrendingAnimeUrl, fetchTrendingAnime);
 
   const sortedAnimeTrendList = categories?.data?.page?.media;
-  const pages = categories?.data?.page;
 
   return {
     getTrendingAnime: fetchTrendingAnime,

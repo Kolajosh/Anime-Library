@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import classNames from "classnames";
 import CenterModal from "../../../components/Modal/CenterModal";
 import { Button } from "../../../components/Button/Button";
-import { ReactComponent as Bookmark } from "../../../assets/svg/bookmark.svg";
 import useToggle from "../../../utils/hooks/useToggle";
 import parse from "html-react-parser";
-import useAnime from "../../../utils/hooks/useAnime";
 import useApiRequest from "../../../utils/hooks/useApiRequest";
 import {
   addToCurrentlyWatchingListUrl,
@@ -168,7 +166,9 @@ const Animes = ({ sortedAnimeList, pages, handleNext }) => {
                 >
                   <div className="bg-black relative h-full w-full flex items-center justify-center bg-opacity-50 p-2">
                     <p className="text-white text-[10px] font-light text-center truncate">
-                      {anime?.description === null ? anime?.description : parse(anime?.description)}
+                      {anime?.description === null
+                        ? anime?.description
+                        : parse(anime?.description)}
                     </p>
                   </div>
                 </div>
@@ -238,7 +238,9 @@ const Animes = ({ sortedAnimeList, pages, handleNext }) => {
                 <div>
                   <div className="font-semibold">Description</div>
                   <div className="text-sm font-light font-inter">
-                    {sortedAnimeList[animeIndex]?.description === null ? sortedAnimeList[animeIndex]?.description : parse(sortedAnimeList[animeIndex]?.description)}
+                    {sortedAnimeList[animeIndex]?.description === null
+                      ? sortedAnimeList[animeIndex]?.description
+                      : parse(sortedAnimeList[animeIndex]?.description)}
                     <br />
                     <span>Already watched?</span>
                     <div
