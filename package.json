@@ -33,6 +33,7 @@
     "react-toastify": "^9.1.3",
     "slick-carousel": "^1.8.1",
     "styled-components": "^5.3.9",
+    "surge": "^0.23.1",
     "swr": "^2.1.5",
     "web-vitals": "^2.1.4",
     "yup": "^1.0.2"
@@ -41,7 +42,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "npm run build && surge ./build/ anime-libs.surge.sh"
   },
   "eslintConfig": {
     "extends": [

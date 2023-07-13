@@ -1,6 +1,10 @@
 import React, { useState } from "react";
+import { Button } from "../../components/Button/Button";
 import DashboardWrapper from "../../components/layout/DashboardWrapper";
+import CenterModal from "../../components/Modal/CenterModal";
+import PageLoader from "../../components/PageLoader";
 import { ToastNotify } from "../../components/reusables/helpers/ToastNotify";
+import { reissueToken } from "../../utils/apiUrls/auth.request";
 import {
   moveBookmarktoWatched,
   moveBookmarktoWatching,
@@ -10,6 +14,7 @@ import {
   moveWatchingtoWatchedUrl,
 } from "../../utils/apiUrls/user.request";
 import useApiRequest from "../../utils/hooks/useApiRequest";
+import useToggle from "../../utils/hooks/useToggle";
 import useTrendingAnime from "../../utils/hooks/useTrendingAnime";
 import useUserAnimeList from "../../utils/hooks/useUserAnimeList";
 import { responseMessageHandler } from "../../utils/libs";
@@ -23,10 +28,43 @@ const Dashboard = () => {
   const { sortedAnimeTrendList } = useTrendingAnime();
   const [type, setType] = useState("");
   const [isDragging, setIsDragging] = useState(false);
+  const [loading, toggleLoading] = useToggle();
 
   const userId = localStorage.getItem("id");
 
-  const { watchList, watched, watching, mutate } = useUserAnimeList(userId);
+  const refreshToken = async () => {
+    toggleLoading();
+    const token = localStorage.getItem("accessToken");
+    const refreshToken = localStorage.getItem("refreshToken");
+
+    try {
+      const payload = {
+        accessToken: token,
+        refreshToken: refreshToken,
+      };
+      const response = await makeRequest.post(reissueToken, payload);
+      if (response?.status === 200) {
+        localStorage.setItem("accessToken", response?.data?.data);
+        ToastNotify({
+          type: "success",
+          message: "Success",
+          position: "top-right",
+        });
+      }
+      toggleLoading();
+      console.log(response);
+    } catch (error) {
+      toggleLoading();
+      ToastNotify({
+        type: "error",
+        message: responseMessageHandler({ error }),
+        position: "top-right",
+      });
+    }
+  };
+
+  const { watchList, watched, watching, userAnimeListError, mutate } =
+    useUserAnimeList(userId);
 
   const handleDragStart = (event, x, type) => {
     event.dataTransfer.setData("card", JSON.stringify(x));
@@ -154,6 +192,7 @@ const Dashboard = () => {
   return (
     <div>
       <DashboardWrapper>
+        {loading && <PageLoader message="Refreshing" />}
         <div className="my-5 font-inter">
           {/* <div className="font-bold text-xl mb-5">Anime Library 👒</div> */}
           <div className="mx-10 font-semibold text-sm mb-5">
@@ -198,6 +237,26 @@ const Dashboard = () => {
           </div>
         </div>
       </DashboardWrapper>
+      {userAnimeListError?.response?.status === 401 && (
+        <CenterModal title="Session" width="50%">
+          <div className="font-normal text-sm font-inter mb-3 text-center">
+            Your session has expired
+          </div>
+          <div className="flex justify-center gap-5">
+            <div onClick={() => refreshToken()}>
+              <Button labelText="Refresh Session" />
+            </div>
+            <div
+              onClick={() => {
+                localStorage.clear();
+                window.location.href = "/";
+              }}
+            >
+              <Button buttonVariant="secondary" labelText="Logout" />
+            </div>
+          </div>
+        </CenterModal>
+      )}
     </div>
   );
 };

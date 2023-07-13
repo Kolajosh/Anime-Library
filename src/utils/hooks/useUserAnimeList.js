@@ -31,7 +31,7 @@ const useUserAnimeList = (userId) => {
     watchList,
     watched,
     watching,
-    error,
+    userAnimeListError: error,
     mutate,
   };
 };
