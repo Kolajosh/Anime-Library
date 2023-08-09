@@ -127,13 +127,13 @@ const Login = () => {
             </div>
 
             <div className="col-span-full">
-              <div className="text-xs mb-2 text-right text-cyan-500 font-normal">
+              <div className="text-sm mb-2 text-right text-cyan-500 font-normal">
                 Forgot Password?
               </div>
               <button
                 type="button"
                 className={`px-5 bg-cyan-500 py-3 text-white rounded-md w-full ${
-                  !(dirty && isValid) && "cursor-not-allowed bg-cyan-200"
+                  !(dirty && isValid) && "cursor-not-allowed bg-cyan-100"
                 }`}
                 onClick={handleSubmit}
                 disabled={!(dirty && isValid)}
@@ -142,7 +142,7 @@ const Login = () => {
               </button>
               <div
                 onClick={() => navigate("/register")}
-                className="font-normal text-xs text-center mt-2 cursor-pointer text-cyan-500"
+                className="font-normal text-sm text-center mt-2 cursor-pointer text-cyan-500"
               >
                 Don't have an account? 😒
               </div>

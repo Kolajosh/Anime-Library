@@ -170,7 +170,7 @@ const Register = () => {
             </div>
 
             {/* button */}
-            <div className="col-span-full mt-5">
+            <div className="col-span-full font-inter mt-5">
               <button
                 type="button"
                 className={`px-5 py-3 text-white rounded-md w-full ${
@@ -188,7 +188,7 @@ const Register = () => {
 
               <div
                 onClick={() => navigate("/")}
-                className="font-normal text-xs text-center mt-3 cursor-pointer text-cyan-500"
+                className="font-normal text-sm text-center mt-3 cursor-pointer text-cyan-500"
               >
                 Have an account? 😁
               </div>

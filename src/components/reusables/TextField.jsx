@@ -47,7 +47,7 @@ export const TextField = forwardRef(
 
     const validationFufilled = value !== "" && success;
     return (
-      <div className={`${containerVariant}`}>
+      <div className={`${containerVariant} font-inter`}>
         {label && (
           <div className="flex items-center justify-between font-poppins font-thin">
             <label
@@ -135,7 +135,7 @@ export const TextField = forwardRef(
         />
 
         {hasError && (
-          <div className="flex gap-2">
+          <div className="flex font-inter gap-2">
             {/* <img src={ErrorIcon} alt="Error" /> */}
             <p className="text-red-500 text-sm h-auto py-1 font-poppins">
               {error}

@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { ReactComponent as Menu } from "../../../assets/svg/menu.svg";
+import { ReactComponent as Bin } from "../../../assets/svg/bin.svg";
 import { ToastNotify } from "../../../components/reusables/helpers/ToastNotify";
 import {
+  deleteFromBookmarks,
+  deleteFromWatching,
   moveWatchingtoBookmark,
   moveWatchingtoWatchedUrl,
 } from "../../../utils/apiUrls/user.request";
@@ -76,6 +79,30 @@ const WatchList = ({
     }
   };
 
+  const deleteAnime = async (datapayload) => {
+    const payload = {
+      ...datapayload,
+    };
+
+    try {
+      const response = await makeRequest.post(deleteFromWatching, payload);
+      if (response?.status === 200) {
+        ToastNotify({
+          message: "Deleted",
+          type: "success",
+          position: "top-right",
+        });
+        mutate();
+      }
+    } catch (error) {
+      ToastNotify({
+        message: responseMessageHandler({ error }),
+        type: "error",
+        position: "top-right",
+      });
+    }
+  };
+
   return (
     <>
       <div className="font-inter">
@@ -123,11 +150,20 @@ const WatchList = ({
                         </div>
                       </div>
                       <div className="relative my-auto">
-                        <div
-                          className="cursor-pointer"
-                          onClick={() => toggleSubMenu(index)}
-                        >
-                          <Menu />
+                        <div className="cursor-pointer flex gap-2">
+                          <div
+                            onClick={() =>
+                              deleteAnime({
+                                animeId: x?.id,
+                                userId: x?.userId,
+                              })
+                            }
+                          >
+                            <Bin />
+                          </div>
+                          <div onClick={() => toggleSubMenu(index)}>
+                            <Menu />
+                          </div>
                         </div>
                         {activeIndex === index && (
                           <div className="absolute text-xs z-10 right-0 mt-2 py-2 w-48 bg-white rounded-md shadow-lg">
